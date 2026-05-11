@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cinderfield</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── TITLE SCREEN ── -->
+<div id="title">
+  <div id="tname">CINDERFIELD</div>
+  <div id="tsub">a silent hill story</div>
+  <div id="tstart">— click to begin —</div>
+</div>
+
+<!-- ── GAME UI ── -->
+<div id="wrap">
+  <div id="header">cinderfield · chapter one · the town</div>
+  <canvas id="gameCanvas" width="512" height="342"></canvas>
+  <div id="ui">
+    <div id="radio">radio · <span id="radioMsg">no signal</span></div>
+    <div id="stamina-wrap">
+      <span id="stamina-label">stamina</span>
+      <div id="stamina-bar"><div id="stamina-fill" style="width:100%"></div></div>
+    </div>
+    <div id="items">inventory · <span id="invMsg">empty</span></div>
+  </div>
+  <div id="dialog">
+    <div id="dtext"></div>
+    <div id="dcontinue">▼ press space</div>
+  </div>
+  <div id="inventory-screen">
+    <div id="case-panel">
+      <div id="case-top">
+        <div id="case-title">attache case</div>
+        <div id="case-close">I / Tab</div>
+      </div>
+      <div id="case-body">
+        <div id="case-grid"></div>
+        <div id="case-info">
+          <div id="case-item-name">empty</div>
+          <div id="case-item-desc">Nothing useful.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="controls">arrow keys · move &nbsp;|&nbsp; space · interact &nbsp;|&nbsp; I / Tab · inventory</div>
+</div>
+
+<script src="js/constants.js"></script>
+<script src="js/map.js"></script>
+<script src="js/tiles.js"></script>
+<script src="js/player.js"></script>
+<script src="js/witnesses.js"></script>
+<script src="js/fog.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/dialog.js"></script>
+<script src="js/input.js"></script>
+<script src="js/inventory.js"></script>
+<script src="js/triggers.js"></script>
+<script src="js/shack.js"></script>
+<script src="js/radio.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

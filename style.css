@@ -1,0 +1,400 @@
+/* ─────────────────────────────────────────
+   style.css
+───────────────────────────────────────── */
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0a0908;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: 'Courier New', monospace;
+}
+
+/* ── GAME WRAPPER ── */
+#wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 650px;
+}
+
+/* ── CHAPTER HEADER ── */
+#header {
+  color: #2a1a0a;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* ── CANVAS ── */
+#gameCanvas {
+  display: block;
+  image-rendering: pixelated;
+  border: 1px solid #1e1208;
+  width: 768px;
+  height: 512px;
+}
+
+/* ── RADIO + INVENTORY BAR ── */
+#ui {
+  width: 768px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  padding: 5px 0;
+}
+
+/* ── STAMINA BAR ── */
+#stamina-wrap {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 6px;
+}
+
+#stamina-label {
+  font-size: 9px;
+  color: #2a1208;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+#stamina-bar {
+  width: 80px;
+  height: 4px;
+  background: #151008;
+  border: 1px solid #1e1208;
+}
+
+#stamina-fill {
+  height: 100%;
+  background: #3a2a10;
+  transition: width 0.1s linear, background 0.3s;
+}
+
+#radio {
+  font-size: 11px;
+  color: #2a1208;
+  letter-spacing: 0.15em;
+  justify-self: start;
+  min-width: 0;
+}
+
+#items {
+  font-size: 11px;
+  color: #2a1208;
+  letter-spacing: 0.1em;
+  text-align: right;
+  justify-self: end;
+  min-width: 0;
+}
+
+/* ── DIALOGUE BOX ── */
+#dialog {
+  width: 768px;
+  position: absolute;
+  left: 50%;
+  bottom: 42px;
+  transform: translateX(-50%);
+  background: #09080a;
+  border: 1px solid #2a1a0a;
+  padding: 16px 20px;
+  min-height: 90px;
+  display: none;
+  z-index: 5;
+}
+
+#inventory-screen {
+  position: absolute;
+  inset: 27px 0 auto 0;
+  height: 512px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 2, 2, 0.72);
+  z-index: 6;
+}
+
+#case-panel {
+  width: 520px;
+  border: 1px solid #362414;
+  background: #080706;
+  box-shadow: 0 0 0 2px #120d08, 0 14px 40px rgba(0,0,0,0.75);
+  padding: 12px;
+}
+
+#case-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #8a7153;
+  border-bottom: 1px solid #2a1b0f;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+#case-title {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+}
+
+#case-close {
+  font-size: 9px;
+  color: #4d3824;
+  letter-spacing: 0.16em;
+}
+
+#case-body {
+  display: grid;
+  grid-template-columns: 1fr 132px;
+  gap: 12px;
+}
+
+#case-grid {
+  position: relative;
+  display: grid;
+  width: 344px;
+  height: 216px;
+  gap: 2px;
+  background: #100c08;
+  border: 1px solid #2a1b0f;
+  padding: 4px;
+}
+
+.case-cell {
+  background: #15100b;
+  border: 1px solid #24170d;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.38);
+}
+
+.case-item {
+  position: relative;
+  z-index: 2;
+  margin: 2px;
+  background: #21170f;
+  border: 1px solid #5a3c20;
+  box-shadow: inset 0 0 0 1px #100b07, 0 2px 0 rgba(0,0,0,0.45);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: transform 90ms ease, box-shadow 90ms ease, filter 90ms ease;
+}
+
+.case-item:active {
+  cursor: grabbing;
+}
+
+.case-item.dragging {
+  z-index: 4;
+  cursor: grabbing;
+  filter: brightness(1.14);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: inset 0 0 0 1px #24180e, 0 6px 0 rgba(0,0,0,0.45), 0 10px 18px rgba(0,0,0,0.45);
+}
+
+.case-item.dropped {
+  animation: caseItemSettle 150ms ease-out;
+}
+
+.case-item.selected {
+  border-color: #9b7442;
+  box-shadow: inset 0 0 0 1px #21160d, 0 0 0 1px rgba(155,116,66,0.45);
+}
+
+.case-item.selected.dragging {
+  box-shadow: inset 0 0 0 1px #2b1d10, 0 0 0 1px rgba(155,116,66,0.5), 0 6px 0 rgba(0,0,0,0.45), 0 10px 18px rgba(0,0,0,0.45);
+}
+
+#case-info {
+  border: 1px solid #2a1b0f;
+  background: #0c0907;
+  padding: 10px;
+  min-height: 216px;
+}
+
+#case-item-name {
+  color: #9b805f;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+#case-item-desc {
+  color: #5f4a36;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.switchblade-icon {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.switchblade-art {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+.case-item-vertical .switchblade-art {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.switchblade-art span {
+  position: absolute;
+  display: block;
+}
+
+.knife-handle {
+  left: 2px;
+  top: 11px;
+  width: 26px;
+  height: 7px;
+  background: #241a14;
+  border-top: 2px solid #60452f;
+  border-bottom: 2px solid #100c09;
+}
+
+.knife-grip {
+  left: 5px;
+  top: 13px;
+  width: 18px;
+  height: 2px;
+  background: #120d0a;
+  box-shadow: 7px 0 0 #120d0a, 13px 0 0 #120d0a;
+}
+
+.knife-bolster {
+  left: 25px;
+  top: 9px;
+  width: 6px;
+  height: 10px;
+  background: #897356;
+  border-right: 2px solid #2d241c;
+}
+
+.knife-pin {
+  left: 8px;
+  top: 13px;
+  width: 3px;
+  height: 3px;
+  background: #a89167;
+}
+
+.blade-main {
+  left: 30px;
+  top: 6px;
+  width: 28px;
+  height: 6px;
+  background: #948c78;
+  clip-path: polygon(0 35%, 86% 0, 100% 38%, 6% 100%);
+}
+
+.blade-shadow {
+  left: 31px;
+  top: 10px;
+  width: 23px;
+  height: 3px;
+  background: #5c594d;
+  clip-path: polygon(0 25%, 100% 0, 88% 100%, 4% 100%);
+}
+
+.blade-edge {
+  left: 34px;
+  top: 7px;
+  width: 22px;
+  height: 2px;
+  background: #c1b796;
+}
+
+#dtext {
+  font-size: 15px;
+  color: #8a7868;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+#dcontinue {
+  font-size: 11px;
+  color: #3a2010;
+  letter-spacing: 0.2em;
+  margin-top: 8px;
+  animation: blink 1.1s infinite;
+}
+
+/* ── CONTROLS HINT ── */
+#controls {
+  color: #1e1208;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+}
+
+/* ── TITLE SCREEN ── */
+#title {
+  position: fixed;
+  inset: 0;
+  background: #09080a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  cursor: pointer;
+  z-index: 99;
+}
+
+#tname {
+  font-size: 64px;
+  color: #c8b89a;
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 60px rgba(180,140,80,0.2);
+  animation: titleflicker 5s infinite;
+}
+
+#tsub {
+  font-size: 14px;
+  color: #3a2a1a;
+  letter-spacing: 0.4em;
+}
+
+#tstart {
+  font-size: 12px;
+  color: #4a3a2a;
+  letter-spacing: 0.25em;
+  margin-top: 10px;
+  animation: blink 1.2s infinite;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes caseItemSettle {
+  0%   { transform: translateY(-3px) scale(1.02); }
+  55%  { transform: translateY(2px) scale(0.985); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes titleflicker {
+  0%,  100% { opacity: 1;   }
+  91%        { opacity: 1;   }
+  92%        { opacity: 0.5; }
+  93%        { opacity: 1;   }
+  96%        { opacity: 0.7; }
+  97%        { opacity: 1;   }
+}
